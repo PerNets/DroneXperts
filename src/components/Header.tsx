@@ -1,48 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isProductPage = location.pathname.includes('/product/');
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const href = e.currentTarget.getAttribute('href');
-    if (!href || href === '#') return;
-
-    const targetElement = document.querySelector(href);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
+    
+    if (href === '#') {
+      if (isProductPage) {
+        navigate('/');
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else if (href) {
+      if (isProductPage) {
+        navigate(`/${href}`);
+      } else {
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     }
+    
+    setIsMenuOpen(false);
   };
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-black/80 backdrop-blur-md' : 'bg-transparent'
-    }`}>
-      <nav className="container mx-auto px-4 py-4">
+    <header className="fixed w-full z-50 transition-all duration-300 bg-black/80 backdrop-blur-md">
+      <nav className="container mx-auto px-4 py-1">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="flex-shrink-0">
               <img 
-                src="/images/drone-removebg-preview.png" 
-                alt="Drone Icon" 
-                className="h-12 w-12 object-contain blue-filter"
+                src="/images/image-removebg-preview.png" 
+                alt="DroneXperts Logo" 
+                className="h-24 w-auto object-contain"
               />
-            </div>
-            <div>
-              <span className="text-2xl font-bold text-gradient">DroneXperts</span>
-              <span className="text-sm block text-gray-400">המומחים לרחפנים</span>
             </div>
           </div>
           

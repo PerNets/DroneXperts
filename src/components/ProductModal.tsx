@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { X, MessageCircle, Package, ListChecks } from 'lucide-react';
 import { Product } from '../types';
+import { CurrencyContext } from '../App';
 
 interface ProductModalProps {
   product: Product;
@@ -8,8 +9,9 @@ interface ProductModalProps {
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
-  const whatsappNumber = '972XXXXXXXXX';
-  const message = encodeURIComponent(`שלום, אני מעוניין לרכוש את ${product.name}. האם הוא זמין?`);
+  const { currency } = useContext(CurrencyContext);
+  const whatsappNumber = '972548943395';
+  const message = encodeURIComponent(`היי, אני מעוניין לשמוע יותר על ${product.name}`);
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
 
   return (
@@ -83,7 +85,13 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
 
             {/* כפתורי פעולה */}
             <div className="mt-8 flex flex-col gap-4">
-              <div className="text-3xl font-bold text-blue-400 mb-2">{product.price}</div>
+              <div className="flex flex-col">
+                {currency === 'ILS' ? (
+                  <div className="text-3xl font-bold text-blue-400">{product.price}</div>
+                ) : (
+                  <div className="text-3xl font-bold text-blue-400">{product.priceUSD}</div>
+                )}
+              </div>
               <a
                 href={whatsappLink}
                 target="_blank"
@@ -91,7 +99,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ product, onClose }) => {
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl flex items-center justify-center gap-2 hover:from-green-600 hover:to-green-700 transition-all shadow-lg"
               >
                 <MessageCircle className="h-5 w-5" />
-                הזמן עכשיו
+                דברו איתנו
               </a>
             </div>
           </div>
