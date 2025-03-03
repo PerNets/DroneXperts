@@ -90,20 +90,20 @@ const HomePage: React.FC = () => {
         </video>
         <div className="gradient-overlay" />
         
-        <div className="content-layer container mx-auto px-4 text-center py-16">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 md:mb-8 text-gradient leading-tight">
+        <div className="content-layer container mx-auto px-4 py-8 md:py-16">
+          <div className="hero-text-container">
+            <h1 className="hero-title font-heebo font-bold text-gradient">
               המומחים לרחפנים מקצועיים
             </h1>
-            <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-12 text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              הטכנולוגיה המתקדמת ביותר, הניסיון העשיר ביותר, השירות הטוב ביותר
+            <p className="hero-subtitle font-heebo text-gray-100">
+              מגוון רחפנים מתקדמים, דגמים נדירים שלא תמצאו בכל מקום, ובמחירים הכי טובים
             </p>
-            <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center max-w-xl mx-auto">
+            <div className="hero-buttons">
               <a
                 href={generalWhatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl inline-flex items-center justify-center gap-2 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg text-base md:text-lg"
+                className="whatsapp-button rounded-xl inline-flex items-center justify-center gap-2"
               >
                 <MessageCircle className="h-5 w-5" />
                 דברו איתנו
@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
                   e.preventDefault();
                   document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="glass-effect px-6 md:px-8 py-3 md:py-4 rounded-xl inline-flex items-center justify-center gap-2 hover:bg-white/20 transition-all text-base md:text-lg"
+                className="catalog-button rounded-xl inline-flex items-center justify-center gap-2"
               >
                 לקטלוג המוצרים
                 <ChevronDown className="h-5 w-5" />
@@ -252,12 +252,14 @@ const HomePage: React.FC = () => {
                 // Extract price values for conversion
                 const priceValueILS = extractPriceValue(product.price);
                 
-                // Calculate USD price based on current exchange rate
-                const priceValueUSD = convertPrice(priceValueILS, 'ILS', 'USD', exchangeRate);
+                // Use the direct USD price from the product data if available, otherwise calculate it
+                const priceValueUSD = product.priceUSD 
+                  ? extractPriceValue(product.priceUSD) 
+                  : convertPrice(priceValueILS, 'ILS', 'USD', exchangeRate);
                 
                 // Format prices with currency symbols
                 const formattedPriceILS = formatPrice(priceValueILS, 'ILS');
-                const formattedPriceUSD = formatPrice(priceValueUSD, 'USD');
+                const formattedPriceUSD = product.priceUSD || formatPrice(priceValueUSD, 'USD');
                 
                 return (
                   <Link 

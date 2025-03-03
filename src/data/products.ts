@@ -30,7 +30,7 @@ export const products: Product[] = [
     name: 'DJI Mini 4 Pro',
     description: 'רחפן קומפקטי במשקל 249 גרם עם ביצועים מקצועיים',
     category: 'compact',
-    price: '₪3,499',
+    price: '₪4,499',
     priceUSD: '$1,300.00',
     slug: 'dji-mini-4-pro',
     image: '/images/DJI-Mini-4-Pro-1.jpg',
@@ -53,7 +53,7 @@ export const products: Product[] = [
     name: 'DJI Mavic 3 Enterprise',
     description: 'רחפן מקצועי לשימושים עסקיים עם מצלמה תרמית מובנית',
     category: 'premium',
-    price: '₪29,999',
+    price: '₪14,999',
     priceUSD: '$4,032.00',
     slug: 'dji-mavic-3-enterprise',
     image: '/images/dji-mavic-3-enterprise-drones.jpg',
@@ -73,12 +73,12 @@ export const products: Product[] = [
   },
   {
     id: '4',
-    name: 'DJI Mavic 3 Thermal',
+    name: 'DJI Mavic 2 Thermal',
     description: 'רחפן פרימיום עם יכולות צילום תרמי מתקדמות',
     category: 'premium',
-    price: '₪34,999',
+    price: '₪11,999',
     priceUSD: '$3,330.00',
-    slug: 'dji-mavic-3-thermal',
+    slug: 'dji-mavic-2-thermal',
     image: '/images/DJI-Mavic-3-Thermal-M3T-Drohne-im-Flug-Image-Source-DJI.jpg',
     specs: [
       'מצלמה תרמית ברזולוציה גבוהה',
@@ -99,7 +99,7 @@ export const products: Product[] = [
     name: 'DJI Matrice 30T',
     description: 'רחפן תעשייתי מתקדם לשימושים מקצועיים',
     category: 'premium',
-    price: '₪49,999',
+    price: '₪34,999',
     priceUSD: '$9,520.00',
     slug: 'dji-matrice-30t',
     image: '/images/DJI-Matrice-30-field.jpg',
@@ -145,7 +145,7 @@ export const products: Product[] = [
     name: 'DJI Avata 2 FMC',
     description: 'חבילת Fly More Combo עם 3 סוללות ואביזרים',
     category: 'professional',
-    price: '₪6,499',
+    price: '₪5,999',
     priceUSD: '$1,628.00',
     slug: 'dji-avata-2-fmc',
     image: '/images/DJI Avata 2 FMC.jpg',
@@ -170,7 +170,7 @@ export const products: Product[] = [
     name: 'DJI Mini 3',
     description: 'רחפן קל משקל אידיאלי למתחילים',
     category: 'compact',
-    price: '₪2,499',
+    price: '₪3,499',
     priceUSD: '$951.50',
     slug: 'dji-mini-3',
     image: '/images/DJI Mini 3.jpg',
@@ -262,7 +262,7 @@ export const products: Product[] = [
     name: 'DJI Avata Battery',
     description: 'סוללה מקורית לרחפן DJI Avata',
     category: 'batteries',
-    price: '₪599',
+    price: '₪299',
     priceUSD: '$85.00',
     slug: 'dji-avata-battery',
     image: '/images/DJI Avata Battery.jpg',
@@ -278,7 +278,7 @@ export const products: Product[] = [
     name: 'DJI Mavic Battery',
     description: 'סוללה מקורית לסדרת Mavic',
     category: 'batteries',
-    price: '₪799',
+    price: '₪999',
     priceUSD: '$275.00',
     slug: 'dji-mavic-battery',
     image: '/images/DJI Mavic Battery.jpg',
@@ -326,7 +326,7 @@ export const products: Product[] = [
     name: 'DJI H20 Camera',
     description: 'מצלמה היברידית לשימוש תעשייתי',
     category: 'cameras',
-    price: '₪9,999',
+    price: '₪28,000',
     priceUSD: '$7,800.00',
     slug: 'dji-h20-camera',
     image: '/images/DJI H20 Camera.jpg',
@@ -342,7 +342,7 @@ export const products: Product[] = [
     name: 'DJI H20T Camera',
     description: 'מצלמה היברידית עם יכולות תרמיות מתקדמות',
     category: 'cameras',
-    price: '₪14,999',
+    price: '₪36,000',
     priceUSD: '$10,000.00',
     slug: 'dji-h20t-camera',
     image: '/images/DJI H20T Camera.jpg',
@@ -374,10 +374,10 @@ export const products: Product[] = [
     name: 'DJI Air 2S + Smart RC',
     description: 'רחפן מקצועי עם שלט חכם מובנה',
     category: 'professional',
-    price: '₪4,500',
+    price: '₪4,699',
     priceUSD: '$1,300.00',
     slug: 'dji-air-2s-smart-rc',
-    image: '/images/DJI Air 2S Smart RC.jpg',
+    image: '/images/Avata 1.jpg',
     specs: [
       'מצלמת 5.4K',
       'חיישן 1-אינץ\'',
@@ -397,7 +397,7 @@ export const products: Product[] = [
     name: 'DJI Air 2S Standard RC',
     description: 'רחפן מקצועי עם שלט סטנדרטי',
     category: 'professional',
-    price: '₪3,900',
+    price: '₪3,999',
     priceUSD: '$1,100.00',
     slug: 'dji-air-2s-standard-rc',
     image: '/images/DJI Air 2S Standard RC.jpg',
@@ -420,7 +420,7 @@ export const products: Product[] = [
     name: 'Avata 2 Drone Only',
     description: 'רחפן FPV Avata 2 בלבד, ללא שלט או משקפיים',
     category: 'compact',
-    price: '₪2,500',
+    price: '₪2,499',
     priceUSD: '$700.00',
     slug: 'avata-2-drone-only',
     image: '/images/Avata 2 Drone Only.jpg',
@@ -461,7 +461,7 @@ export const products: Product[] = [
     price: '₪4,500',
     priceUSD: '$1,250.00',
     slug: 'avata-1-3-batteries',
-    image: '/images/Avata 1 + 3 Batteries.jpg',
+    image: '/images2/jigly.jpg',
     specs: [
       'מצלמת 4K/60fps',
       '3 סוללות מקוריות',
@@ -536,6 +536,7 @@ export const products: Product[] = [
     category: 'controllers',
     price: '₪1,950',
     priceUSD: '$550.00',
+    slug: 'rc-3-fpv',
     image: '/images/RC 3 FPV.jpg',
     specs: [
       'מקלות בדיוק גבוה',
@@ -551,6 +552,7 @@ export const products: Product[] = [
     category: 'controllers',
     price: '₪1,100',
     priceUSD: '$300.00',
+    slug: 'motion-controller',
     image: '/images/Motion Controller.jpg',
     specs: [
       'שליטה אינטואיטיבית',
@@ -566,6 +568,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪750',
     priceUSD: '$210.00',
+    slug: 'multi-charger-evo',
     image: '/images/Multi Charger EVO.jpg',
     specs: [
       'טעינה של עד 4 סוללות במקביל',
@@ -581,6 +584,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪55',
     priceUSD: '$15.00',
+    slug: 'evo-propeller',
     image: '/images/EVO Propeller.jpg',
     specs: [
       'סט של 2 זוגות',
@@ -596,6 +600,7 @@ export const products: Product[] = [
     category: 'batteries',
     price: '₪180',
     priceUSD: '$50.00',
+    slug: 'fpv-battery',
     image: '/images/FPV Battery.jpg',
     specs: [
       'קיבולת גבוהה',
@@ -611,6 +616,7 @@ export const products: Product[] = [
     category: 'batteries',
     price: '₪850',
     priceUSD: '$240.00',
+    slug: 'mavic-2-battery',
     image: '/images/Mavic 2 Battery.jpg',
     specs: [
       'קיבולת: 3850mAh',
@@ -626,6 +632,7 @@ export const products: Product[] = [
     category: 'batteries',
     price: '₪410',
     priceUSD: '$115.00',
+    slug: 'mini-3-4-battery',
     image: '/images/Mini 3-4 Battery.jpg',
     specs: [
       'קיבולת: 2453mAh',
@@ -641,6 +648,7 @@ export const products: Product[] = [
     category: 'batteries',
     price: '₪450',
     priceUSD: '$125.00',
+    slug: 'mini-4-plus-battery',
     image: '/images/Mini 4 Plus Battery.jpg',
     specs: [
       'קיבולת: 3050mAh',
@@ -656,6 +664,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪1,250',
     priceUSD: '$350.00',
+    slug: 'solar-panel',
     image: '/images/Solar Panel.jpg',
     specs: [
       'הספק: 100W',
@@ -671,6 +680,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪2,850',
     priceUSD: '$800.00',
+    slug: 'tb30-charger',
     image: '/images/TB30 Charger.jpg',
     specs: [
       'טעינה של עד 4 סוללות במקביל',
@@ -686,6 +696,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪430',
     priceUSD: '$120.00',
+    slug: 'fpv-charger',
     image: '/images/FPV Charger.jpg',
     specs: [
       'טעינה של עד 3 סוללות במקביל',
@@ -701,6 +712,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪1,450',
     priceUSD: '$400.00',
+    slug: 'mavic-3-speaker',
     image: '/images/Mavic 3 Speaker.jpg',
     specs: [
       'עוצמת שמע גבוהה',
@@ -716,6 +728,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪180',
     priceUSD: '$50.00',
+    slug: 'dongle-mavic-3',
     image: '/images/Dongle Mavic 3.jpg',
     specs: [
       'שיפור קליטה',
@@ -731,6 +744,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪70',
     priceUSD: '$20.00',
+    slug: 'cellular-mavic-3',
     image: '/images/Cellular Mavic 3.jpg',
     specs: [
       'תקשורת סלולרית',
@@ -746,6 +760,7 @@ export const products: Product[] = [
     category: 'batteries',
     price: '₪1,500',
     priceUSD: '$420.00',
+    slug: 'one-evo-battery',
     image: '/images/One EVO Battery.jpg',
     specs: [
       'קיבולת גבוהה',
@@ -761,6 +776,7 @@ export const products: Product[] = [
     category: 'batteries',
     price: '₪1,200',
     priceUSD: '$340.00',
+    slug: 'evo-battery',
     image: '/images/EVO Battery.jpg',
     specs: [
       'קיבולת: 4300mAh',
@@ -776,6 +792,7 @@ export const products: Product[] = [
     category: 'cameras',
     price: '₪24,500',
     priceUSD: '$6,800.00',
+    slug: 'xt2-camera',
     image: '/images/XT2 Camera.jpg',
     specs: [
       'רזולוציה תרמית גבוהה',
@@ -791,6 +808,7 @@ export const products: Product[] = [
     category: 'cameras',
     price: '₪45,000',
     priceUSD: '$12,500.00',
+    slug: 'h30t-camera',
     image: '/images/H30T Camera.jpg',
     specs: [
       'זום אופטי x30',
@@ -806,6 +824,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪3,950',
     priceUSD: '$1,100.00',
+    slug: 'power-1000',
     image: '/images/Power 1000.jpg',
     specs: [
       'קיבולת: 1000Wh',
@@ -821,6 +840,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪55',
     priceUSD: '$15.00',
+    slug: 'sim-cards',
     image: '/images/SIM Cards.jpg',
     specs: [
       'תקשורת נתונים מהירה',
@@ -836,6 +856,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪215',
     priceUSD: '$60.00',
+    slug: 'spare-parts-drone',
     image: '/images/Spare Parts Drone.jpg',
     specs: [
       'כולל פרופלורים',
@@ -851,6 +872,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪125',
     priceUSD: '$35.00',
+    slug: 'spare-parts-wind',
     image: '/images/Spare Parts Wind.jpg',
     specs: [
       'מגני רוח',
@@ -866,6 +888,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪125',
     priceUSD: '$35.00',
+    slug: 'm30t-propeller',
     image: '/images/M30T Propeller.jpg',
     specs: [
       'סט של 2 זוגות',
@@ -881,6 +904,7 @@ export const products: Product[] = [
     category: 'accessories',
     price: '₪1,800',
     priceUSD: '$500.00',
+    slug: 'drone-case',
     image: '/images/Drone Case.jpg',
     specs: [
       'עמידות למים ואבק',

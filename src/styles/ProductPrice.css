@@ -1,0 +1,17 @@
+.price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.main-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.usd-price {
+  color: #6b7280;
+  font-size: 0.875rem;
+} 

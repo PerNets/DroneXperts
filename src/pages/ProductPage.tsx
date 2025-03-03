@@ -80,12 +80,14 @@ const ProductPage: React.FC = () => {
   // Extract price values for conversion
   const priceValueILS = extractPriceValue(product.price);
   
-  // Calculate USD price based on current exchange rate
-  const priceValueUSD = convertPrice(priceValueILS, 'ILS', 'USD', exchangeRate);
+  // Use the direct USD price from the product data if available, otherwise calculate it
+  const priceValueUSD = product.priceUSD 
+    ? extractPriceValue(product.priceUSD) 
+    : convertPrice(priceValueILS, 'ILS', 'USD', exchangeRate);
   
   // Format prices with currency symbols
   const formattedPriceILS = formatPrice(priceValueILS, 'ILS');
-  const formattedPriceUSD = formatPrice(priceValueUSD, 'USD');
+  const formattedPriceUSD = product.priceUSD || formatPrice(priceValueUSD, 'USD');
 
   const relatedProducts = products
     .filter(p => p.category === product.category && p.id !== product.id)
@@ -257,7 +259,9 @@ const ProductPage: React.FC = () => {
             {relatedProducts.map(relatedProduct => {
               // Extract price values for related products
               const relatedPriceILS = extractPriceValue(relatedProduct.price);
-              const relatedPriceUSD = convertPrice(relatedPriceILS, 'ILS', 'USD', exchangeRate);
+              const relatedPriceUSD = relatedProduct.priceUSD 
+                ? extractPriceValue(relatedProduct.priceUSD) 
+                : convertPrice(relatedPriceILS, 'ILS', 'USD', exchangeRate);
               
               return (
                 <Link 
@@ -342,7 +346,9 @@ const ProductPage: React.FC = () => {
                   {searchResults.slice(0, 6).map(result => {
                     // Extract price values for search results
                     const resultPriceILS = extractPriceValue(result.price);
-                    const resultPriceUSD = convertPrice(resultPriceILS, 'ILS', 'USD', exchangeRate);
+                    const resultPriceUSD = result.priceUSD 
+                      ? extractPriceValue(result.priceUSD) 
+                      : convertPrice(resultPriceILS, 'ILS', 'USD', exchangeRate);
                     
                     return (
                       <Link 
