@@ -291,15 +291,9 @@ const ProductPage: React.FC = () => {
     setCurrentImageIndex(index);
   };
 
-  // חישוב המחיר בהתאם למטבע הנבחר
+  // חישוב המחיר - רק בשקלים
   const priceValue = extractPriceValue(product.price);
-  const priceInUSD = product.priceUSD 
-    ? extractPriceValue(product.priceUSD) 
-    : convertPrice(priceValue, 'ILS', 'USD', exchangeRate);
-  
-  const displayPrice = currency === 'ILS' 
-    ? formatPrice(priceValue, 'ILS')
-    : formatPrice(priceInUSD, 'USD');
+  const displayPrice = formatPrice(priceValue, 'ILS');
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -385,23 +379,6 @@ const ProductPage: React.FC = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
                     <span className="text-3xl font-bold text-blue-600">{displayPrice}</span>
-                    <button
-                      onClick={toggleCurrency}
-                      className="inline-flex items-center px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
-                      title="החלף מטבע"
-                    >
-                      {currency === 'ILS' ? (
-                        <>
-                          <DollarSign className="h-4 w-4 ml-2" />
-                          <span>USD</span>
-                        </>
-                      ) : (
-                        <>
-                          <Coins className="h-4 w-4 ml-2" />
-                          <span>ILS</span>
-                        </>
-                      )}
-                    </button>
                   </div>
                   <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
                     product.inStock 

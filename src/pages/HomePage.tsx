@@ -328,40 +328,14 @@ const HomePage: React.FC = () => {
           {/* Currency Toggle Button */}
           <div className="flex flex-col items-center mb-8">
             <button
-              onClick={toggleCurrency}
-              className={`relative overflow-hidden rounded-xl flex items-center gap-2 transition-all duration-300 ${
-                isLoading 
-                  ? 'bg-gray-700 text-gray-300 cursor-wait' 
-                  : currency === 'ILS'
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
-                    : 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800'
-              } px-5 py-3 shadow-lg mb-2`}
-              disabled={isLoading}
+              onClick={() => window.location.href = `tel:972548943395`}
+              className="relative overflow-hidden rounded-xl flex items-center gap-3 transition-all duration-300 bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800 px-6 py-4 shadow-lg mb-2 font-bold text-lg"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>טוען שער חליפין...</span>
-                </>
-              ) : currency === 'ILS' ? (
-                <>
-                  <DollarSign className="h-5 w-5" />
-                  <span>הצג מחירים בדולר</span>
-                </>
-              ) : (
-                <>
-                  <Coins className="h-5 w-5" />
-                  <span>הצג מחירים בשקלים</span>
-                </>
-              )}
+              <div className="bg-white/20 p-2 rounded-full">
+                <Phone className="h-6 w-6" />
+              </div>
+              <span>דברו איתנו</span>
             </button>
-            
-            {/* Exchange Rate Info */}
-            <div className="flex items-center gap-2 text-gray-400 text-sm">
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin text-blue-400' : ''}`} />
-              <span>שער חליפין עדכני:</span>
-              <span className="text-blue-400 font-medium">₪{exchangeRate.toFixed(2)} = $1</span>
-            </div>
           </div>
 
           {filteredProducts.length === 0 && searchQuery ? (
