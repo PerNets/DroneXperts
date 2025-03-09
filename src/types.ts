@@ -8,8 +8,10 @@ export interface Product {
   priceValue?: number;
   slug?: string;
   image: string;
+  images?: string[];
   specs: string[];
   includes?: string[];
+  inStock?: boolean;
 }
 
 export interface Category {

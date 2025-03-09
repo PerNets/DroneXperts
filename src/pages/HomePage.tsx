@@ -1,25 +1,109 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Award, Shield, Clock, ChevronUp, Phone, MessageCircle, DollarSign, Coins, Search, X, Loader2, RefreshCw } from 'lucide-react';
-import { products, categories } from '../data/products';
+import { categories } from '../data/products';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CategoryFilter from '../components/CategoryFilter';
+import ProductCard from '../components/ProductCard';
 import { CurrencyContext } from '../App';
 import { extractPriceValue, formatPrice, convertPrice } from '../types';
+import { getAllProductsFromDataLayer } from '../services/dataLayerService';
+import { hideProductsNotInDataLayer } from '../services/productCleaner';
+import { setupProductAdder } from '../services/productAdder';
 
 const HomePage: React.FC = () => {
   const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [displayCount, setDisplayCount] = useState(3);
   const [searchQuery, setSearchQuery] = useState('');
-  const { currency, setCurrency, exchangeRate, isLoading } = useContext(CurrencyContext);
+  const { currency, setCurrency, exchangeRate } = useContext(CurrencyContext);
+  const [products, setProducts] = useState<any[]>([]);
+  const [dataLayerLoaded, setDataLayerLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   const initialCount = 3;
   const incrementBy = 3;
   const whatsappNumber = '972548943395';
   const generalWhatsappLink = `https://wa.me/${whatsappNumber}`;
   const phoneNumber = '0548943395';
+
+  // טעינת מוצרים מה-DataLayer
+  useEffect(() => {
+    const loadProductsFromDataLayer = () => {
+      setIsLoading(true);
+      try {
+        const dataLayerProducts = getAllProductsFromDataLayer();
+        
+        if (dataLayerProducts && dataLayerProducts.length > 0) {
+          console.log(`נטענו ${dataLayerProducts.length} מוצרים מה-DataLayer`);
+          
+          // בדיקה שלכל מוצר יש תמונה תקפה
+          const productsWithImages = dataLayerProducts.map(product => {
+            // אם אין תמונה למוצר, ננסה למצוא תמונה מתאימה
+            if (!product.image || product.image === '/images/placeholder.jpg') {
+              const productId = product.id;
+              // בדיקת קיום תמונות בפורמטים שונים
+              const fileExtensions = ['.jpg', '.png', '.webp'];
+              for (let i = 1; i <= 4; i++) {
+                for (const ext of fileExtensions) {
+                  const imagePath = `/all-images/${productId}_${i}${ext}`;
+                  // אם מצאנו תמונה, נעדכן את המוצר
+                  const img = new Image();
+                  img.src = imagePath;
+                  img.onload = () => {
+                    // עדכון התמונה במוצר
+                    product.image = imagePath;
+                    // עדכון המוצרים בדף
+                    setProducts(prevProducts => {
+                      const updatedProducts = [...prevProducts];
+                      const index = updatedProducts.findIndex(p => p.id === product.id);
+                      if (index !== -1) {
+                        updatedProducts[index] = { ...updatedProducts[index], image: imagePath };
+                      }
+                      return updatedProducts;
+                    });
+                  };
+                }
+              }
+            }
+            return product;
+          });
+          
+          setProducts(productsWithImages);
+          setDataLayerLoaded(true);
+          
+          // הפעלת מנגנון הוספת מוצרים חדשים
+          setupProductAdder(productsWithImages, setProducts);
+        } else {
+          console.log('לא נמצאו מוצרים ב-DataLayer');
+          // אם אין מוצרים ב-DataLayer, נשאיר מערך ריק
+          setProducts([]);
+        }
+      } catch (error) {
+        console.error('שגיאה בטעינת מוצרים מה-DataLayer:', error);
+        setProducts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    // נסה לטעון מוצרים מה-DataLayer
+    loadProductsFromDataLayer();
+    
+    // הגדר האזנה לאירועי GTM
+    const handleGtmEvent = () => {
+      loadProductsFromDataLayer();
+    };
+    
+    document.addEventListener('gtm.dom', handleGtmEvent);
+    document.addEventListener('gtm.load', handleGtmEvent);
+    
+    return () => {
+      document.removeEventListener('gtm.dom', handleGtmEvent);
+      document.removeEventListener('gtm.load', handleGtmEvent);
+    };
+  }, []);
 
   // Check for search query in URL when component mounts
   useEffect(() => {
@@ -42,34 +126,76 @@ const HomePage: React.FC = () => {
       return (
         product.name.toLowerCase().includes(query) ||
         product.description.toLowerCase().includes(query) ||
-        (product.specs && product.specs.some(spec => spec.toLowerCase().includes(query)))
+        (product.specs && product.specs.some((spec: string) => spec.toLowerCase().includes(query)))
       );
     });
 
+  // מוצרים להצגה לפי מספר התצוגה הנוכחי
   const displayedProducts = filteredProducts.slice(0, displayCount);
-  const hasMore = displayCount < filteredProducts.length;
 
+  // פונקציה להצגת עוד מוצרים
   const handleShowMore = () => {
-    setDisplayCount(prev => Math.min(prev + incrementBy, filteredProducts.length));
+    setDisplayCount(prevCount => prevCount + incrementBy);
   };
 
+  // פונקציה להצגת פחות מוצרים
   const handleShowLess = () => {
     setDisplayCount(initialCount);
-    // גלילה חזרה לתחילת הקטלוג
-    document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // פונקציה להחלפת מטבע
   const toggleCurrency = () => {
-    setCurrency(prev => prev === 'ILS' ? 'USD' : 'ILS');
+    setCurrency(currency === 'ILS' ? 'USD' : 'ILS');
   };
 
+  // פונקציה לטיפול בשינוי בשדה החיפוש
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setDisplayCount(initialCount); // איפוס מספר המוצרים המוצגים בעת חיפוש
   };
 
+  // פונקציה לניקוי החיפוש
   const clearSearch = () => {
     setSearchQuery('');
+  };
+
+  // Products grid section
+  const renderProductsGrid = () => {
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+          <span className="ml-2 text-gray-200">טוען מוצרים...</span>
+        </div>
+      );
+    }
+    
+    if (displayedProducts.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-gray-400 text-lg">לא נמצאו מוצרים להצגה</p>
+          {searchQuery && (
+            <p className="text-gray-500 mt-2">
+              נסה לחפש מונח אחר או <button onClick={clearSearch} className="text-blue-500 hover:underline">נקה את החיפוש</button>
+            </p>
+          )}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {displayedProducts.map(product => (
+          <div key={product.id} className="product-card" data-product-id={product.id} data-product-slug={product.slug}>
+            <ProductCard product={product} />
+            {product.inStock === false && (
+              <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm">
+                אזל מהמלאי
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -249,67 +375,12 @@ const HomePage: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {displayedProducts.map(product => {
-                // Extract price values for conversion
-                const priceValueILS = extractPriceValue(product.price);
-                
-                // Use the direct USD price from the product data if available, otherwise calculate it
-                const priceValueUSD = product.priceUSD 
-                  ? extractPriceValue(product.priceUSD) 
-                  : convertPrice(priceValueILS, 'ILS', 'USD', exchangeRate);
-                
-                // Format prices with currency symbols
-                const formattedPriceILS = formatPrice(priceValueILS, 'ILS');
-                const formattedPriceUSD = product.priceUSD || formatPrice(priceValueUSD, 'USD');
-                
-                return (
-                  <Link 
-                    key={product.id} 
-                    to={`/product/${product.slug}`}
-                    className="glass-effect rounded-2xl overflow-hidden card-hover transform transition-all hover:scale-[1.02]"
-                  >
-                    <div className="relative">
-                      <img 
-                        src={product.image} 
-                        alt={product.name}
-                        className="w-full h-48 md:h-64 object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    </div>
-                    <div className="p-4 md:p-6">
-                      <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-gradient line-clamp-1">{product.name}</h3>
-                      <p className="text-gray-300 mb-4 line-clamp-2 text-sm md:text-base">{product.description}</p>
-                      
-                      <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
-                        {product.specs.slice(0, 3).map((spec, index) => (
-                          <div key={index} className="flex items-center gap-2 text-xs md:text-sm text-gray-300">
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                            <span className="line-clamp-1">{spec}</span>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <div className="text-right">
-                          <div className="text-xl md:text-2xl font-bold text-blue-400 bg-blue-900/20 px-3 py-1 rounded-lg">
-                            {currency === 'ILS' ? formattedPriceILS : formattedPriceUSD}
-                          </div>
-                        </div>
-                        <span className="glass-effect px-3 py-1 rounded-lg text-xs md:text-sm text-gray-300">
-                          {product.category}
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+            renderProductsGrid()
           )}
 
           {filteredProducts.length > 0 && (
             <div className="text-center mt-12 flex flex-col md:flex-row gap-4 justify-center">
-              {hasMore && (
+              {displayCount < filteredProducts.length && (
                 <button
                   onClick={handleShowMore}
                   className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl inline-flex items-center justify-center gap-2 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg text-base md:text-lg"
