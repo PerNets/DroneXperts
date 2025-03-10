@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Award, Shield, Clock, ChevronUp, Phone, MessageCircle, DollarSign, Coins, Search, X, Loader2, RefreshCw } from 'lucide-react';
+import { ChevronDown, Award, Shield, Clock, ChevronUp, Phone, MessageCircle, DollarSign, Coins, Search, X, Loader2, RefreshCw, Package } from 'lucide-react';
 import { categories } from '../data/products';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -115,6 +115,18 @@ const HomePage: React.FC = () => {
       setDisplayCount(6);
     }
   }, [location.search]);
+
+  // Handle scroll to section when navigating from product page
+  useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      const targetElement = document.querySelector(`#${location.state.scrollTo}`);
+      if (targetElement) {
+        setTimeout(() => {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location.state]);
 
   // פילטור מוצרים לפי קטגוריה וחיפוש
   const filteredProducts = products
@@ -340,13 +352,31 @@ const HomePage: React.FC = () => {
 
           {filteredProducts.length === 0 && searchQuery ? (
             <div className="text-center py-12">
-              <p className="text-2xl text-gray-400">לא נמצאו מוצרים התואמים את החיפוש</p>
-              <button
-                onClick={clearSearch}
-                className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-all"
-              >
-                נקה חיפוש
-              </button>
+              <div className="mb-6">
+                <Search className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                <p className="text-gray-200 text-lg mb-2">לא מצאנו את מה שאתם מחפשים</p>
+                <p className="text-gray-400">אבל שווה לבדוק איתנו בטלפון או בווטסאפ אם יש לנו את מה שאתם צריכים</p>
+              </div>
+              
+              <div className="flex items-center justify-center gap-4">
+                <a
+                  href={`https://wa.me/${whatsappNumber}?text=היי,%20אני%20מחפש%20את%20המוצר:%20${searchQuery}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-colors shadow-md"
+                >
+                  <MessageCircle className="h-5 w-5 ml-2" />
+                  צור קשר בווטסאפ
+                </a>
+                
+                <a
+                  href={`tel:${phoneNumber}`}
+                  className="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors shadow-md"
+                >
+                  <Phone className="h-5 w-5 ml-2" />
+                  חייג עכשיו
+                </a>
+              </div>
             </div>
           ) : (
             renderProductsGrid()
@@ -378,39 +408,117 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 md:py-24 bg-gradient-to-b from-gray-900 to-black">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-gradient">המומחיות שלנו</h2>
-          <p className="text-base md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            עם ניסיון של שנים בתחום הרחפנים המקצועיים, אנחנו מביאים לכם את הטכנולוגיה המתקדמת ביותר בעולם. הצוות שלנו מורכב ממומחים מובילים בתחום, המספקים ייעוץ מקצועי והדרכה מקיפה לכל לקוח.
-          </p>
+      <section id="about" className="py-16 md:py-24 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full filter blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gradient">בחרתם נכון!</h2>
+              <p className="text-blue-400/80 mt-3 text-lg">הנה למה אלפי לקוחות סומכים עלינו</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {/* Feature Cards */}
+              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 rounded-2xl backdrop-blur-sm border border-gray-700/30 hover:border-blue-500/30 transition-all duration-300 group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-blue-500/10 rounded-xl group-hover:bg-blue-500/20 transition-all">
+                    <Award className="h-6 w-6 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-white">מומחיות מוכחת</h3>
+                    <p className="text-gray-300 leading-relaxed">שנים של ניסיון בתחום הרחפנים המקצועיים, עם צוות מומחים שמבין כל היבט של הטכנולוגיה.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 rounded-2xl backdrop-blur-sm border border-gray-700/30 hover:border-blue-500/30 transition-all duration-300 group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-green-500/10 rounded-xl group-hover:bg-green-500/20 transition-all">
+                    <DollarSign className="h-6 w-6 text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-white">המחירים הטובים בארץ</h3>
+                    <p className="text-gray-300 leading-relaxed">מחויבים להציע את המחירים התחרותיים ביותר בשוק, בלי להתפשר על איכות המוצרים.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 rounded-2xl backdrop-blur-sm border border-gray-700/30 hover:border-blue-500/30 transition-all duration-300 group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-purple-500/10 rounded-xl group-hover:bg-purple-500/20 transition-all">
+                    <Shield className="h-6 w-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-white">אחריות ושירות</h3>
+                    <p className="text-gray-300 leading-relaxed">תמיכה מקצועית לאורך כל הדרך, עם אחריות מלאה על כל המוצרים שלנו.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 rounded-2xl backdrop-blur-sm border border-gray-700/30 hover:border-blue-500/30 transition-all duration-300 group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-orange-500/10 rounded-xl group-hover:bg-orange-500/20 transition-all">
+                    <Package className="h-6 w-6 text-orange-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-white">מגוון מוצרים ייחודי</h3>
+                    <p className="text-gray-300 leading-relaxed">מבחר רחב של דגמים נדירים ומתקדמים שלא תמצאו בשום מקום אחר.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center max-w-2xl mx-auto">
+              <p className="text-xl text-blue-400 font-medium mb-6">המומחים לרחפנים מקצועיים</p>
+              <p className="text-gray-300 leading-relaxed">
+                אנחנו ב-DroneXperts מביאים לכם את הטכנולוגיה המתקדמת ביותר בעולם הרחפנים. 
+                עם ניסיון של שנים בתחום, אנחנו מתמחים באספקת פתרונות מקצועיים, 
+                ייעוץ מומחה והדרכה מקיפה לכל לקוח.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-gradient">צור קשר</h2>
-          <p className="text-lg md:text-xl mb-8 md:mb-12 text-gray-300">המומחים שלנו כאן בשבילכם</p>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center max-w-2xl mx-auto">
-            <a
-              href={generalWhatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl flex-1 inline-flex items-center justify-center gap-2 hover:from-green-600 hover:to-green-700 transition-all shadow-lg"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-whatsapp" viewBox="0 0 16 16">
-                <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
-              </svg>
-              התייעצות עם נציג
-            </a>
-            <a
-              href={`tel:+${phoneNumber}`}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl flex-1 inline-flex items-center justify-center gap-2 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg"
-            >
-              <Phone className="h-5 w-5" />
-              חייגו עכשיו
-            </a>
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-gradient mb-4">יש לכם שאלות? אנחנו כאן בשבילכם!</h2>
+            <p className="text-lg md:text-xl text-gray-300 mb-8">
+              רוצים לשמוע עוד על הרחפנים שלנו? מתלבטים לגבי דגם מסוים?<br/>
+              <span className="text-blue-400 font-medium">המומחים שלנו ישמחו לעזור 👋</span>
+            </p>
+            
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center max-w-2xl mx-auto">
+              <a
+                href={generalWhatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl flex-1 inline-flex items-center justify-center gap-2 hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:scale-105 duration-300"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-whatsapp" viewBox="0 0 16 16">
+                  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                </svg>
+                התייעצות בווטסאפ
+              </a>
+              <a
+                href={`tel:${phoneNumber}`}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl flex-1 inline-flex items-center justify-center gap-2 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg hover:scale-105 duration-300"
+              >
+                <Phone className="h-5 w-5" />
+                שיחה מיידית
+              </a>
+            </div>
+            
+            <p className="text-gray-400 text-sm mt-6">
+              זמינים עבורכם בכל שאלה, 7 ימים בשבוע
+            </p>
           </div>
         </div>
       </section>

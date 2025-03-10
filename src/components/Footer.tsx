@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle, Phone, ChevronRight, Facebook, Instagram, Youtube } from 'lucide-react';
+import { MessageCircle, Phone, ChevronRight } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -31,19 +31,6 @@ const Footer: React.FC = () => {
             <p className="text-gray-300 mb-8 leading-relaxed">
               המומחים לרחפנים מקצועיים בישראל. אנו מספקים את הטכנולוגיה המתקדמת ביותר בתחום הרחפנים, עם דגש על איכות, שירות ומקצועיות.
             </p>
-            
-            {/* Social Media */}
-            <div className="flex gap-4 mb-8">
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-blue-600 hover:text-white transition-all">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-gradient-to-br from-purple-600 to-pink-500 hover:text-white transition-all">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-300 hover:bg-red-600 hover:text-white transition-all">
-                <Youtube className="h-5 w-5" />
-              </a>
-            </div>
           </div>
           
           {/* Quick Links */}

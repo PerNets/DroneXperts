@@ -16,7 +16,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const whatsappNumber = '972548943395';
   const message = encodeURIComponent(`היי, אני מעוניין לשמוע יותר על ${product.name}`);
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
-  const [currentImage, setCurrentImage] = useState<string>(product.image);
+  const [currentImage, setCurrentImage] = useState<string>(product.image || '/images/placeholder.jpg');
   const [imageError, setImageError] = useState(false);
   const [attemptedImages, setAttemptedImages] = useState<string[]>([]);
 
@@ -55,7 +55,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   // עדכון התמונה כאשר המוצר משתנה
   useEffect(() => {
-    setCurrentImage(product.image);
+    setCurrentImage(product.image || '/images/placeholder.jpg');
     setImageError(false);
   }, [product.id, product.image]);
 
@@ -99,31 +99,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
         
         {/* פרטי המוצר */}
-        <div className="p-5">
-          <h3 className="text-lg font-bold mb-2 text-gray-800 line-clamp-1">{product.name}</h3>
+        <div className="p-4">
+          <h3 className="text-lg font-bold text-gray-900 mb-2">{product.name}</h3>
+          <p className="text-gray-600 text-sm line-clamp-2 mb-4">{product.description}</p>
           
-          <div className="mb-4">
-            <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
-          </div>
-          
-          {/* מפרט מקוצר */}
-          <div className="space-y-2 mb-4">
-            {product.specs && product.specs.slice(0, 3).map((spec, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
-                {index === 0 && <Camera className="h-4 w-4 text-blue-500" />}
-                {index === 1 && <Battery className="h-4 w-4 text-green-500" />}
-                {index === 2 && <Wifi className="h-4 w-4 text-purple-500" />}
-                <span className="line-clamp-1">{spec}</span>
-              </div>
-            ))}
-          </div>
-          
-          {/* מחיר וכפתור */}
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex flex-col">
-              <span className="text-sm text-gray-500">מחיר</span>
-              <div className="font-bold text-xl text-blue-600">{product.price}</div>
+          {/* מחיר */}
+          <div className="flex items-center justify-between">
+            <div className="text-lg font-bold text-blue-600">
+              {displayPrice}
             </div>
+            
+            {/* כפתור יצירת קשר */}
+            <a
+              href={`https://wa.me/972542323232?text=היי,%20אני%20מעוניין%20לקבל%20פרטים%20על%20המוצר:%20${encodeURIComponent(product.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-2 bg-green-500 text-white px-3 py-1.5 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>צור קשר</span>
+            </a>
           </div>
         </div>
       </Link>

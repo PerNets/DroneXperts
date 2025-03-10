@@ -38,15 +38,34 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Prevent body scroll when menu is open
+  // Handle clicks outside the menu to close it
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const menuElement = document.querySelector('.mobile-menu-content');
+      const menuButton = document.querySelector('.mobile-menu-button');
+      const target = event.target as Node;
+
+      // אם לחצו על הכפתור או על התפריט - לא עושים כלום
+      if (menuButton?.contains(target) || menuElement?.contains(target)) {
+        return;
+      }
+      
+      // אם התפריט פתוח ולחצו מחוץ - סוגרים אותו
+      if (isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // מוסיפים את ה-event listener רק אם התפריט פתוח
     if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      // נחכה רגע קט לפני הוספת ה-listener כדי למנוע סגירה מיידית
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 100);
     }
+
     return () => {
-      document.body.style.overflow = '';
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [isMenuOpen]);
 
@@ -63,9 +82,10 @@ const Header = () => {
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      } else if (href) {
+      } else {
         if (isProductPage) {
-          navigate(`/${href}`);
+          // Navigate to home page with the section ID
+          navigate('/', { state: { scrollTo: href.substring(1) } });
         } else {
           const targetElement = document.querySelector(href);
           if (targetElement) {
@@ -82,11 +102,11 @@ const Header = () => {
     <header 
       className={`fixed w-full z-50 transition-all duration-300 backdrop-blur-md ${
         scrolled 
-          ? 'bg-gradient-to-b from-black/95 to-black/90 shadow-md py-0.5' 
-          : 'bg-gradient-to-b from-black/90 to-black/85 shadow-sm py-1'
+          ? 'bg-gradient-to-b from-black/95 to-black/90 shadow-md py-1.5' 
+          : 'bg-gradient-to-b from-black/90 to-black/85 py-2'
       }`}
     >
-      <div className="container mx-auto">
+      <div className="container mx-auto relative">
         <nav className="px-3">
           <div className="flex flex-row-reverse justify-between items-center relative z-50">
             {/* Logo positioned on the right for RTL layout */}
@@ -102,7 +122,7 @@ const Header = () => {
                   src="/all-images/DronExpers-Logo.png" 
                   alt="DroneXperts Logo" 
                   className={`object-contain transition-all duration-300 ${
-                    scrolled ? 'h-9 w-auto' : 'h-10 w-auto'
+                    scrolled ? 'h-10 w-auto' : 'h-11 w-auto'
                   }`}
                 />
               </a>
@@ -110,7 +130,7 @@ const Header = () => {
             
             {/* Enhanced Desktop Navigation Menu */}
             <div className="hidden md:block">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <NavItem 
                   href="#contact" 
                   label="צור קשר" 
@@ -144,7 +164,7 @@ const Header = () => {
 
             {/* Enhanced Mobile menu button on the left for RTL layout */}
             <button 
-              className={`md:hidden flex items-center justify-center w-10 h-10 rounded-md transition-all duration-300 ${
+              className={`mobile-menu-button md:hidden flex items-center justify-center w-10 h-10 rounded-md transition-all duration-300 ${
                 isMenuOpen 
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' 
                   : 'bg-blue-500/20 text-white hover:bg-blue-500/40 active:bg-blue-500/50'
@@ -162,60 +182,62 @@ const Header = () => {
               </div>
             </button>
           </div>
-
-          {/* Enhanced Mobile Menu with Animation - positioned below the header */}
-          <div 
-            className={`md:hidden fixed inset-x-0 bottom-0 top-[60px] bg-black/80 backdrop-blur-lg transition-all duration-300 z-40 ${
-              isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-            }`}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <div 
-              className={`mx-4 bg-gradient-to-b from-blue-900/90 to-black/95 p-4 rounded-lg shadow-xl border border-blue-500/20 transition-all duration-300 transform ${
-                isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
-              }`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex flex-col space-y-3 py-2">
-                <a 
-                  href="#" 
-                  onClick={handleNavClick} 
-                  className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
-                >
-                  <Home size={18} className="text-blue-400" />
-                  <span>דף הבית</span>
-                </a>
-                <a 
-                  href="#catalog" 
-                  onClick={handleNavClick} 
-                  className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
-                >
-                  <ShoppingBag size={18} className="text-blue-400" />
-                  <span>קטלוג</span>
-                </a>
-                <a 
-                  href="#about" 
-                  onClick={handleNavClick} 
-                  className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
-                >
-                  <Info size={18} className="text-blue-400" />
-                  <span>אודות</span>
-                </a>
-                <a 
-                  href="#contact" 
-                  onClick={handleNavClick} 
-                  className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
-                >
-                  <Phone size={18} className="text-blue-400" />
-                  <span>צור קשר</span>
-                </a>
-              </div>
-              <div className="mt-4 pt-3 border-t border-blue-500/20 text-center">
-                <p className="text-sm text-blue-300/80">DroneXperts - המומחים לרחפנים מקצועיים</p>
-              </div>
-            </div>
-          </div>
         </nav>
+      </div>
+      
+      {/* Decorative bottom border */}
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/10 to-transparent"></div>
+      
+      {/* Enhanced Mobile Menu with Animation - positioned below the header */}
+      <div 
+        className={`md:hidden fixed inset-x-0 bottom-0 top-[60px] bg-black/80 backdrop-blur-lg transition-all duration-300 z-40 ${
+          isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div 
+          className={`mobile-menu-content mx-4 bg-gradient-to-b from-blue-900/90 to-black/95 p-4 rounded-lg shadow-xl border border-blue-500/20 transition-all duration-300 transform ${
+            isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-col space-y-3 py-2">
+            <a 
+              href="#" 
+              onClick={handleNavClick} 
+              className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
+            >
+              <Home size={18} className="text-blue-400" />
+              <span>דף הבית</span>
+            </a>
+            <a 
+              href="#catalog" 
+              onClick={handleNavClick} 
+              className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
+            >
+              <ShoppingBag size={18} className="text-blue-400" />
+              <span>קטלוג</span>
+            </a>
+            <a 
+              href="#about" 
+              onClick={handleNavClick} 
+              className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
+            >
+              <Info size={18} className="text-blue-400" />
+              <span>אודות</span>
+            </a>
+            <a 
+              href="#contact" 
+              onClick={handleNavClick} 
+              className="flex items-center gap-3 py-2.5 px-4 text-white hover:text-blue-300 bg-white/5 hover:bg-blue-500/20 rounded-md transition-all text-base font-medium"
+            >
+              <Phone size={18} className="text-blue-400" />
+              <span>צור קשר</span>
+            </a>
+          </div>
+          <div className="mt-4 pt-3 border-t border-blue-500/20 text-center">
+            <p className="text-sm text-blue-300/80">DroneXperts - המומחים לרחפנים מקצועיים</p>
+          </div>
+        </div>
       </div>
     </header>
   );

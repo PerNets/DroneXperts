@@ -26,6 +26,11 @@ const ProductPage: React.FC = () => {
   const [validImages, setValidImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // פונקציה לטיפול בשגיאת טעינת תמונה
   const handleImageError = (imageSrc: string) => {
     console.log(`Failed to load image: ${imageSrc}`);
@@ -451,7 +456,7 @@ const ProductPage: React.FC = () => {
               
               {/* כפתור יצירת קשר */}
               <a
-                href="https://wa.me/972542323232?text=היי,%20אני%20מעוניין%20לקבל%20פרטים%20על%20המוצר"
+                href={`https://wa.me/972542323232?text=היי,%20אני%20מעוניין%20לקבל%20פרטים%20על%20המוצר:%20${encodeURIComponent(product.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white py-4 px-6 rounded-xl hover:from-green-600 hover:to-green-700 transition-all focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 shadow-lg"
