@@ -24,9 +24,54 @@ export interface DataLayerProduct {
 // מערך לשמירת תמונות שנבדקו ונמצאו תקפות
 const validatedImages: Record<string, boolean> = {};
 
+// פונקציה לסינון מוצרים לא רצויים
+function filterUnwantedProducts(products: DataLayerProduct[]): DataLayerProduct[] {
+  return products.filter(product => {
+    const name = product.product_display_name.toLowerCase();
+    return name !== 'mavic kit' && name !== 'dji mavic kit';
+  });
+}
+
+// פונקציה להוספת מוצר Mavic FMC
+function injectMavicFMC() {
+  if (typeof window === 'undefined') return;
+  
+  const mavicFMC: DataLayerProduct = {
+    product_id: '9134',
+    product_display_name: 'Mavic FMC',
+    brand: 'DJI',
+    slug: 'dji-mavic-fmc',
+    price_nis: 3390,
+    in_stock: true,
+    comments: '3 סוללות + מטען'
+  };
+  
+  // בדיקה אם יש כבר dataLayer
+  if (!window.dataLayer) {
+    window.dataLayer = [];
+  }
+  
+  // בדיקה אם יש כבר אובייקט drones
+  const dronesObject = window.dataLayer.find((item: any) => item.drones);
+  if (dronesObject) {
+    // הוספת המוצר למערך הקיים
+    if (!dronesObject.drones.some((p: DataLayerProduct) => p.product_id === mavicFMC.product_id)) {
+      dronesObject.drones.push(mavicFMC);
+    }
+  } else {
+    // יצירת אובייקט drones חדש
+    window.dataLayer.push({ drones: [mavicFMC] });
+  }
+  
+  console.log('DataLayerService: Added Mavic FMC to DataLayer');
+}
+
 // פונקציה לקבלת מוצרים מה-DataLayer
 export function getProductsFromDataLayer(): DataLayerProduct[] {
   if (typeof window === 'undefined') return [];
+  
+  // הוספת Mavic FMC
+  injectMavicFMC();
   
   // מצא את האובייקט שמכיל את מערך הרחפנים
   const dataLayer = window.dataLayer || [];
@@ -35,9 +80,9 @@ export function getProductsFromDataLayer(): DataLayerProduct[] {
   const dronesObject = dataLayer.find((item: any) => item.drones);
   console.log('DataLayerService: Found drones object:', dronesObject);
   
-  // אם נמצא, החזר את מערך הרחפנים, אחרת החזר מערך ריק
-  const products = dronesObject ? dronesObject.drones : [];
-  console.log('DataLayerService: Retrieved products:', products);
+  // אם נמצא, החזר את מערך הרחפנים לאחר סינון, אחרת החזר מערך ריק
+  const products = dronesObject ? filterUnwantedProducts(dronesObject.drones) : [];
+  console.log('DataLayerService: Retrieved filtered products:', products);
   return products;
 }
 
@@ -112,21 +157,20 @@ export function convertDataLayerProductToProduct(dataLayerProduct: DataLayerProd
     });
   }
   
-  // בחירת התמונה הראשית - תמיד נתחיל עם התמונה הראשונה
-  const mainImage = `/all-images/${productId}_1.jpg`;
-  
-  // יצירת מערך מפרטים ריק
-  let specs: string[] = [];
-  let includes: string[] = [];
-  
   // בדיקה אם קיים מוצר סטטי עם אותו slug
   const staticProduct = staticProducts.find(p => p.slug === dataLayerProduct.slug);
   
+  let specs: string[] = [];
+  let includes: string[] = [];
+  let mainImage: string = '';
+  
   if (staticProduct) {
-    // אם קיים מוצר סטטי, נשתמש במפרט ובתכולה שלו
+    // אם קיים מוצר סטטי, נשתמש במפרט, בתכולה ובתמונה שלו
     specs = staticProduct.specs;
     includes = staticProduct.includes || [];
-    console.log(`Found static product for ${dataLayerProduct.slug}, using its specs and includes`);
+    mainImage = staticProduct.image;
+    possibleImagePaths.unshift(staticProduct.image);
+    console.log(`Found static product for ${dataLayerProduct.slug}, using its specs, includes and image`);
   } else {
     // אחרת, ננסה לחלץ מפרטים מהערות
     if (dataLayerProduct.comments) {
@@ -137,6 +181,8 @@ export function convertDataLayerProductToProduct(dataLayerProduct: DataLayerProd
         }
       });
     }
+    // אם אין מוצר סטטי, נשתמש בתמונה מתיקיית all-images
+    mainImage = `/all-images/${productId}_1.jpg`;
   }
   
   return {
