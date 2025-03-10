@@ -1,4 +1,5 @@
 import { Product } from '../types';
+import { products as staticProducts } from '../data/products';
 
 // הרחבת טיפוס Window כדי לכלול את dataLayer
 declare global {
@@ -115,16 +116,27 @@ export function convertDataLayerProductToProduct(dataLayerProduct: DataLayerProd
   const mainImage = `/all-images/${productId}_1.jpg`;
   
   // יצירת מערך מפרטים ריק
-  const specs: string[] = [];
+  let specs: string[] = [];
+  let includes: string[] = [];
   
-  // הוספת מפרטים מהערות אם קיימות
-  if (dataLayerProduct.comments) {
-    const commentsLines = dataLayerProduct.comments.split('\n');
-    commentsLines.forEach(line => {
-      if (line.trim()) {
-        specs.push(line.trim());
-      }
-    });
+  // בדיקה אם קיים מוצר סטטי עם אותו slug
+  const staticProduct = staticProducts.find(p => p.slug === dataLayerProduct.slug);
+  
+  if (staticProduct) {
+    // אם קיים מוצר סטטי, נשתמש במפרט ובתכולה שלו
+    specs = staticProduct.specs;
+    includes = staticProduct.includes || [];
+    console.log(`Found static product for ${dataLayerProduct.slug}, using its specs and includes`);
+  } else {
+    // אחרת, ננסה לחלץ מפרטים מהערות
+    if (dataLayerProduct.comments) {
+      const commentsLines = dataLayerProduct.comments.split('\n');
+      commentsLines.forEach(line => {
+        if (line.trim()) {
+          specs.push(line.trim());
+        }
+      });
+    }
   }
   
   return {
@@ -138,7 +150,7 @@ export function convertDataLayerProductToProduct(dataLayerProduct: DataLayerProd
     image: mainImage,
     images: possibleImagePaths,
     specs: specs,
-    includes: [],
+    includes: includes,
     inStock
   };
 }

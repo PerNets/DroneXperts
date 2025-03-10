@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { extractPriceValue, formatPrice, convertPrice, Product } from '../types';
 import { findProductInDataLayer, convertDataLayerProductToProduct, DataLayerProduct, getAllProductsFromDataLayer } from '../services/dataLayerService';
+import ProductCard from '../components/ProductCard';
 
 // תמונת ברירת מחדל למקרה שתמונה לא נטענת
 const DEFAULT_IMAGE = '/images/placeholder.jpg';
@@ -504,27 +505,9 @@ const ProductPage: React.FC = () => {
             {searchResults.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {searchResults.map(product => (
-                  <Link
-                    key={product.id}
-                    to={`/product/${product.slug}`}
-                    className="group block bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all border border-gray-100"
-                    onClick={clearSearch}
-                  >
-                    <div className="aspect-w-16 aspect-h-9 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="object-contain w-full h-full p-4 transform group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = DEFAULT_IMAGE;
-                        }}
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-lg font-bold mb-2 text-gray-900">{product.name}</h3>
-                      <p className="text-blue-600 font-bold">{product.price}</p>
-                    </div>
-                  </Link>
+                  <div key={product.id} className="product-card" data-product-id={product.id} data-product-slug={product.slug}>
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
             ) : (
